@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="sellasset_form_view" model="ir.ui.view">
+            <field name="name">EBS.sellasset.form</field>
+            <field name="model">sell.asset</field>
+            <field name="arch" type="xml">
+                <form string="Sell Asset">
+                    <group>
+                    <group>
+                    <field name="partner_id"/>
+                    <field name="asset_id"  />
+                    <field name="amount" widget="monetary" />
+
+                    </group>
+                    <group>
+                        <field name="date"/>
+
+                    </group>
+
+                </group>
+                    <footer>
+
+                    <button name="sell_asset" string="Sell Asset" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+                </form>
+            </field>
+        </record>
+        <record id="sell_asset_wizard" model="ir.actions.act_window">
+            <field name="name">sell.asset.wizard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sell.asset</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sellasset_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+    </data>
+</odoo>

@@ -1,25 +1,25 @@
 <odoo>
   <data>
     <!-- Inherit Form View to Modify it -->
-<!--    <record id="asset_view_inherit" model="ir.ui.view">-->
-<!--        <field name="name">asset view inherit</field>-->
-<!--        <field name="model">account.asset.asset</field>-->
-<!--        <field name="inherit_id" ref="om_account_asset.view_account_asset_asset_form"/>-->
-<!--        <field name="arch" type="xml">-->
+    <record id="asset_view_inherit" model="ir.ui.view">
+        <field name="name">asset view inherit</field>
+        <field name="model">account.asset.asset</field>
+        <field name="inherit_id" ref="om_account_asset.view_account_asset_asset_form"/>
+        <field name="arch" type="xml">
 
-<!--            <xpath expr="//button[@name='set_to_close']" position="after">-->
-<!--                &lt;!&ndash; Add your fields or attributes here &ndash;&gt;-->
-<!--              <button name="asset_improvement" states="open" string="Asset Improvement" type="object" class="oe_highlight"/>-->
-<!--              <button name="asset_sell" states="open" string="Sell with Price" type="object" class="oe_highlight"/>-->
-<!--            </xpath>-->
-<!--            <xpath expr="//page[@string='Depreciation Information']" position="after">-->
-<!--                <page string="Improvement InFormation">-->
-<!--                    -->
-<!--                </page>-->
-<!--            </xpath>-->
+            <xpath expr="//button[@name='validate']" position="after">
+                <!-- Add your fields or attributes here -->
+              <button name="asset_improvement" states="open" string="Asset Improvement" type="object" class="oe_highlight"/>
+              <button name="%(asset_improvement.sell_asset_wizard)d" states="open,running" string="Sell" type="action" class="oe_highlight" context="{'default_asset_id': active_id}"/>
+            </xpath>
+<!--&lt;!&ndash;            <xpath expr="//page[@string='Depreciation Information']" position="after">&ndash;&gt;-->
+<!--&lt;!&ndash;                <page string="Improvement InFormation">&ndash;&gt;-->
 
-<!--        </field>-->
-<!--    </record>-->
+<!--&lt;!&ndash;                </page>&ndash;&gt;-->
+<!--&lt;!&ndash;            </xpath>&ndash;&gt;-->
+
+        </field>
+    </record>
     <!-- explicit list view definition -->
     <!--
     <record model="ir.ui.view" id="asset_improvement.list">

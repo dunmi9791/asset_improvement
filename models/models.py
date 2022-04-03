@@ -15,7 +15,7 @@ class AssetImprovementLine(models.Model):
     _description = 'AssetImprovementLine'
 
 
-    name = fields.Char(string='Depreciation Name', required=True, index=True)
+    name = fields.Char(string='Improvement Name', required=True, index=True)
     sequence = fields.Integer(required=True)
     asset_id = fields.Many2one('account.asset.asset', string='Asset', required=True, ondelete='cascade')
     parent_state = fields.Selection(related='asset_id.state', string='State of Asset')
@@ -106,7 +106,17 @@ class AccountAsset(models.Model):
         inverse_name='asset_id',
         string='Asset_improvement_ids',
         required=False)
-
+    state = fields.Selection(
+        selection_add=[('sold', 'Sold')],
+    )
+    sale_date = fields.Date(string="Disposal date")
+    sale_move_id = fields.Many2one(
+        comodel_name='account.move', string="Disposal move",
+    )
+    sale_invoice = fields.Many2one(
+        comodel_name='account.invoice',
+        string='Sale_invoice',
+        required=False)
 
 # class asset_improvement(models.Model):
 #     _name = 'asset_improvement.asset_improvement'
