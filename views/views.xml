@@ -20,6 +20,7 @@
 
         </field>
     </record>
+
       <!-- Inherit Form View to Modify it -->
       <record id="category_view_inherit" model="ir.ui.view">
           <field name="name">category view inherit</field>

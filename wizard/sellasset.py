@@ -39,6 +39,7 @@ class SellAsset(models.TransientModel):
             invoice = self.env['account.invoice'].create(invoice_vals)
             self.asset_id.sale_invoice = invoice.id
             self.asset_id.sale_invoice.action_invoice_open()
+            self.asset_id.sale_move_id = invoice.move_id.id
             if self.amount > self.residual_value :
                 asset_name = self.asset_number
                 category_id = self.asset_id.category_id
@@ -78,7 +79,8 @@ class SellAsset(models.TransientModel):
                     'journal_id': category_id.journal_id.id,
                     'line_ids': [(0, 0, move_line_1), (0, 0, move_line_2)],
                 }
-                self.env['account.move'].create(move_vals)
+                move = self.env['account.move'].create(move_vals)
+                self.asset_id.gain_loss_move_id = move.id
                 # entered = entry.id
                 # entered.action_post()
             elif self.amount < self.residual_value:
@@ -120,7 +122,8 @@ class SellAsset(models.TransientModel):
                     'journal_id': category_id.journal_id.id,
                     'line_ids': [(0, 0, move_line_1), (0, 0, move_line_2)],
                 }
-                self.env['account.move'].create(move_vals)
+                move = self.env['account.move'].create(move_vals)
+                self.asset_id.gain_loss_move_id = move.id
 
 
 

@@ -113,11 +113,43 @@ class AccountAsset(models.Model):
     sale_move_id = fields.Many2one(
         comodel_name='account.move', string="Disposal move",
     )
+    gain_loss_move_id = fields.Many2one(
+        comodel_name='account.move', string="Gain/Loss move",
+    )
     sale_invoice = fields.Many2one(
         comodel_name='account.invoice',
         string='Sale_invoice',
         required=False)
 
+    @api.multi
+    def open_entries(self):
+        move_ids = []
+        for asset in self:
+            if asset.sale_move_id:
+                move_ids.append(asset.sale_move_id.id)
+                if asset.gain_loss_move_id:
+                    move_ids.append(asset.gain_loss_move_id.id)
+                    for depreciation_line in asset.depreciation_line_ids:
+                        if depreciation_line.move_id:
+                            move_ids.append(depreciation_line.move_id.id)
+        return {
+            'name': _('Journal Entries'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.move',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'domain': [('id', 'in', move_ids)],
+        }
+
+    @api.one
+    @api.depends('value', 'salvage_value', 'depreciation_line_ids.move_check', 'depreciation_line_ids.amount', 'sale_invoice.amount_untaxed')
+    def _amount_residual(self):
+        total_amount = 0.0
+        for line in self.depreciation_line_ids:
+            if line.move_check:
+                total_amount += line.amount
+        self.value_residual = self.value - total_amount - self.salvage_value - self.sale_invoice.amount_untaxed
 
 class AccountAssetCategory(models.Model):
     _inherit = 'account.asset.category'
