@@ -118,6 +118,11 @@ class AccountAsset(models.Model):
         string='Sale_invoice',
         required=False)
 
+
+class AccountAssetCategory(models.Model):
+    _inherit = 'account.asset.category'
+
+    account_asset_gain = fields.Many2one(comodel_name='account.account', string='Asset Gain Account')
 # class asset_improvement(models.Model):
 #     _name = 'asset_improvement.asset_improvement'
 

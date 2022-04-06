@@ -9,13 +9,15 @@
                 <form string="Sell Asset">
                     <group>
                     <group>
-                    <field name="partner_id"/>
-                    <field name="asset_id"  />
-                    <field name="amount" widget="monetary" />
+                        <field name="partner_id"/>
+                        <field name="asset_id"  />
+                        <field name="asset_number"/>
+                        <field name="amount" widget="monetary" />
 
                     </group>
                     <group>
                         <field name="date"/>
+                        <field name="residual_value"/>
 
                     </group>
 
