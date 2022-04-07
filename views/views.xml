@@ -9,7 +9,7 @@
 
             <xpath expr="//button[@name='validate']" position="after">
                 <!-- Add your fields or attributes here -->
-              <button name="asset_improvement" states="open" string="Asset Improvement" type="object" class="oe_highlight"/>
+              <button name="%(asset_improvement.improve_asset_wizard)d" states="open,running" string="Asset Improvement" type="action" class="oe_highlight" context="{'default_asset_id': active_id}"/>
               <button name="%(asset_improvement.sell_asset_wizard)d" states="open,running" string="Sell" type="action" class="oe_highlight" context="{'default_asset_id': active_id}"/>
             </xpath>
 <!--&lt;!&ndash;            <xpath expr="//page[@string='Depreciation Information']" position="after">&ndash;&gt;-->
@@ -33,6 +33,16 @@
                   <!-- Add your fields or attributes here -->
               </xpath>
 
+          </field>
+      </record>
+      <record id="improvement_view_tree" model="ir.ui.view">
+          <field name="name">improvement_view_tree</field>
+          <field name="model">asset.improvement.line</field>
+          <field name="arch" type="xml">
+              <tree string="improvement_tree">
+                  <field name="name"/>
+                  <field name="amount"/>
+              </tree>
           </field>
       </record>
     <!-- explicit list view definition -->

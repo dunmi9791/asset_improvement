@@ -16,13 +16,13 @@ class AssetImprovementLine(models.Model):
 
 
     name = fields.Char(string='Improvement Name', required=True, index=True)
-    sequence = fields.Integer(required=True)
+    # sequence = fields.Integer(required=False)
     asset_id = fields.Many2one('account.asset.asset', string='Asset', required=True, ondelete='cascade')
     parent_state = fields.Selection(related='asset_id.state', string='State of Asset')
     amount = fields.Float(string='Current Improvement Cost', digits=0, required=True)
-    remaining_value = fields.Float(string='New Value', digits=0, required=True)
-    depreciated_value = fields.Float(string='Cumulative Improvements', required=True)
-    depreciation_date = fields.Date('Improvement Date', index=True)
+    # remaining_value = fields.Float(string='New Value', digits=0, required=False)
+    # depreciated_value = fields.Float(string='Cumulative Improvements', required=False)
+    # depreciation_date = fields.Date('Improvement Date', index=True)
     move_id = fields.Many2one('account.move', string='Improvement Entry')
     move_check = fields.Boolean(compute='_get_move_check', string='Linked', track_visibility='always', store=True)
     move_posted_check = fields.Boolean(compute='_get_move_posted_check', string='Posted', track_visibility='always',
@@ -150,6 +150,7 @@ class AccountAsset(models.Model):
         total_amount = 0.0
         gain_amount = 0.0
         loss_amount = 0.0
+        improvement = 0.0
         for line in self.depreciation_line_ids:
             if line.move_check:
                 total_amount += line.amount
@@ -159,15 +160,24 @@ class AccountAsset(models.Model):
         for loss in self:
             if loss.loss_amount:
                 loss_amount += loss.loss_amount
+        for improve in self.asset_improvement_ids:
+            improvement += improve.amount
         if self.state == 'sold':
-            self.value_residual = self.value - total_amount - self.salvage_value - self.sale_invoice.amount_untaxed - loss_amount + gain_amount
+            self.value_residual = self.value - total_amount - self.salvage_value + improvement - self.sale_invoice.amount_untaxed - loss_amount + gain_amount
         else:
-            self.value_residual = self.value - total_amount -self.salvage_value
+            self.value_residual = self.value - total_amount - self.salvage_value + improvement
 
 class AccountAssetCategory(models.Model):
     _inherit = 'account.asset.category'
 
     account_asset_gain = fields.Many2one(comodel_name='account.account', string='Asset Gain Account')
+
+class AccountInvoice(models.Model):
+    _inherit = 'account.invoice'
+
+    asset_capital_exp = fields.Boolean(
+        string='Asset capital exp',
+        required=False)
 # class asset_improvement(models.Model):
 #     _name = 'asset_improvement.asset_improvement'
 
