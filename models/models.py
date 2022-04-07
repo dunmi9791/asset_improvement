@@ -120,6 +120,8 @@ class AccountAsset(models.Model):
         comodel_name='account.invoice',
         string='Sale_invoice',
         required=False)
+    gain_amount = fields.Float(string='Gain', required=False)
+    loss_amount = fields.Float(string='Loss')
 
     @api.multi
     def open_entries(self):
@@ -146,10 +148,21 @@ class AccountAsset(models.Model):
     @api.depends('value', 'salvage_value', 'depreciation_line_ids.move_check', 'depreciation_line_ids.amount', 'sale_invoice.amount_untaxed')
     def _amount_residual(self):
         total_amount = 0.0
+        gain_amount = 0.0
+        loss_amount = 0.0
         for line in self.depreciation_line_ids:
             if line.move_check:
                 total_amount += line.amount
-        self.value_residual = self.value - total_amount - self.salvage_value - self.sale_invoice.amount_untaxed
+        for gain in self:
+            if gain.gain_amount:
+                gain_amount += gain.gain_amount
+        for loss in self:
+            if loss.loss_amount:
+                loss_amount += loss.loss_amount
+        if self.state == 'sold':
+            self.value_residual = self.value - total_amount - self.salvage_value - self.sale_invoice.amount_untaxed - loss_amount + gain_amount
+        else:
+            self.value_residual = self.value - total_amount -self.salvage_value
 
 class AccountAssetCategory(models.Model):
     _inherit = 'account.asset.category'

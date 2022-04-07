@@ -13,7 +13,7 @@ class SellAsset(models.TransientModel):
         required=True)
     date = fields.Date(
         string='Date', 
-        required=False)
+        required=True)
     asset_id = fields.Many2one(comodel_name="account.asset.asset")
     amount = fields.Float(
         string='Amount', 
@@ -81,6 +81,8 @@ class SellAsset(models.TransientModel):
                 }
                 move = self.env['account.move'].create(move_vals)
                 self.asset_id.gain_loss_move_id = move.id
+                self.asset_id.gain_amount = gain_amount
+                self.asset_id.state = 'sold'
                 # entered = entry.id
                 # entered.action_post()
             elif self.amount < self.residual_value:
@@ -124,7 +126,10 @@ class SellAsset(models.TransientModel):
                 }
                 move = self.env['account.move'].create(move_vals)
                 self.asset_id.gain_loss_move_id = move.id
-
+                self.asset_id.loss_amount = loss_amount
+                self.asset_id.state = 'sold'
+            elif self.amount == self.residual_value:
+                self.asset_id.state = 'sold'
 
 
 
