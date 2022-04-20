@@ -48,6 +48,7 @@
                         <field name="partner_id"/>
                         <field name="asset_id"  />
                         <field name="amount" widget="monetary" />
+                        <field name="description"/>
 
                     </group>
                     <group>

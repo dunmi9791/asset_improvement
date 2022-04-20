@@ -20,6 +20,9 @@ class AssetImprovementLine(models.Model):
     asset_id = fields.Many2one('account.asset.asset', string='Asset', required=True, ondelete='cascade')
     parent_state = fields.Selection(related='asset_id.state', string='State of Asset')
     amount = fields.Float(string='Current Improvement Cost', digits=0, required=True)
+    description = fields.Char(
+        string='Description', 
+        required=False)
     # remaining_value = fields.Float(string='New Value', digits=0, required=False)
     # depreciated_value = fields.Float(string='Cumulative Improvements', required=False)
     # depreciation_date = fields.Date('Improvement Date', index=True)

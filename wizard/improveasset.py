@@ -15,6 +15,9 @@ class ImproveAsset(models.TransientModel):
     amount = fields.Float(
         string='Amount',
         required=False)
+    description = fields.Char(
+        string='Description',
+        required=False)
 
     def improve_asset(self):
         for inv in self:
@@ -35,6 +38,7 @@ class ImproveAsset(models.TransientModel):
                 'name': asset.name,
                 'asset_id': asset.id,
                 'amount': inv.amount,
+                'description': inv.description,
 
 
             }
